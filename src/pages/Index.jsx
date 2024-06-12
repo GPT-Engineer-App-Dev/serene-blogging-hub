@@ -1,6 +1,14 @@
 import { Box, Container, Flex, Heading, Link, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 const Index = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    setPosts(storedPosts);
+  }, []);
+
   return (
     <Container maxW="container.xl">
       {/* Header */}
@@ -11,6 +19,7 @@ const Index = () => {
             <Link href="/" mx={2} color="white">Home</Link>
             <Link href="/about" mx={2} color="white">About</Link>
             <Link href="/blog" mx={2} color="white">Blog</Link>
+            <Link href="/add-post" mx={2} color="white">Add Post</Link>
           </Flex>
         </Flex>
       </Box>
@@ -19,7 +28,16 @@ const Index = () => {
       <Box as="main" flex="1">
         <VStack spacing={4} align="start">
           <Heading as="h2" size="md">Welcome to My Blog</Heading>
-          <Text>This is a placeholder for blog posts. Stay tuned for updates!</Text>
+          {posts.length === 0 ? (
+            <Text>No blog posts yet. Be the first to add one!</Text>
+          ) : (
+            posts.map((post, index) => (
+              <Box key={index} p={4} borderWidth="1px" borderRadius="md" w="100%">
+                <Heading as="h3" size="md">{post.title}</Heading>
+                <Text mt={2}>{post.content}</Text>
+              </Box>
+            ))
+          )}
         </VStack>
       </Box>
 
